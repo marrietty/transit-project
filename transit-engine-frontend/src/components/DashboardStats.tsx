@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Sun, Sunset, CloudSun } from 'lucide-react';
+import { Sun, Sunset, CloudSun } from 'lucide-react';
 
 interface Station {
   id: string;
