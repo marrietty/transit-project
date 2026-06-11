@@ -1,0 +1,410 @@
+[
+  {
+    "id": "lrt1-fpj",
+    "name": "Fernando Poe Jr.",
+    "line": "LRT-1",
+    "order": 1,
+    "coordinates": { "lat": 14.6576, "lng": 121.0211 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt1-balintawak",
+    "name": "Balintawak",
+    "line": "LRT-1",
+    "order": 2,
+    "coordinates": { "lat": 14.6575, "lng": 121.0042 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt1-monumento",
+    "name": "Monumento",
+    "line": "LRT-1",
+    "order": 3,
+    "coordinates": { "lat": 14.6575, "lng": 120.9839 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "lrt1-5th-ave",
+    "name": "5th Avenue",
+    "line": "LRT-1",
+    "order": 4,
+    "coordinates": { "lat": 14.6445, "lng": 120.9836 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt1-r-papa",
+    "name": "R. Papa",
+    "line": "LRT-1",
+    "order": 5,
+    "coordinates": { "lat": 14.6360, "lng": 120.9830 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 1 }
+  },
+  {
+    "id": "lrt1-abad-santos",
+    "name": "Abad Santos",
+    "line": "LRT-1",
+    "order": 6,
+    "coordinates": { "lat": 14.6277, "lng": 120.9822 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 1 }
+  },
+  {
+    "id": "lrt1-blumentritt",
+    "name": "Blumentritt",
+    "line": "LRT-1",
+    "order": 7,
+    "coordinates": { "lat": 14.6225, "lng": 120.9828 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "lrt1-tayuman",
+    "name": "Tayuman",
+    "line": "LRT-1",
+    "order": 8,
+    "coordinates": { "lat": 14.6167, "lng": 120.9831 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt1-bambang",
+    "name": "Bambang",
+    "line": "LRT-1",
+    "order": 9,
+    "coordinates": { "lat": 14.6094, "lng": 120.9814 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt1-doroteo-jose",
+    "name": "Doroteo Jose",
+    "line": "LRT-1",
+    "order": 10,
+    "coordinates": { "lat": 14.6019, "lng": 120.9818 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "lrt1-carriedo",
+    "name": "Carriedo",
+    "line": "LRT-1",
+    "order": 11,
+    "coordinates": { "lat": 14.5997, "lng": 120.9806 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "lrt1-central",
+    "name": "Central Terminal",
+    "line": "LRT-1",
+    "order": 12,
+    "coordinates": { "lat": 14.5931, "lng": 120.9814 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "lrt1-un-ave",
+    "name": "UN Avenue",
+    "line": "LRT-1",
+    "order": 13,
+    "coordinates": { "lat": 14.5826, "lng": 120.9818 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt1-pedro-gil",
+    "name": "Pedro Gil",
+    "line": "LRT-1",
+    "order": 14,
+    "coordinates": { "lat": 14.5769, "lng": 120.9834 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "lrt1-quirino",
+    "name": "Quirino",
+    "line": "LRT-1",
+    "order": 15,
+    "coordinates": { "lat": 14.5701, "lng": 120.9904 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt1-vito-cruz",
+    "name": "Vito Cruz",
+    "line": "LRT-1",
+    "order": 16,
+    "coordinates": { "lat": 14.5631, "lng": 120.9947 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "lrt1-gil-puyat",
+    "name": "Gil Puyat",
+    "line": "LRT-1",
+    "order": 17,
+    "coordinates": { "lat": 14.5542, "lng": 120.9972 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "lrt1-libertad",
+    "name": "Libertad",
+    "line": "LRT-1",
+    "order": 18,
+    "coordinates": { "lat": 14.5476, "lng": 120.9984 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt1-edsa",
+    "name": "EDSA",
+    "line": "LRT-1",
+    "order": 19,
+    "coordinates": { "lat": 14.5385, "lng": 121.0007 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "lrt1-baclaran",
+    "name": "Baclaran",
+    "line": "LRT-1",
+    "order": 20,
+    "coordinates": { "lat": 14.5281, "lng": 121.0019 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "lrt1-redemptorist",
+    "name": "Redemptorist",
+    "line": "LRT-1",
+    "order": 21,
+    "coordinates": { "lat": 14.5222, "lng": 120.9977 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt1-mia",
+    "name": "Manila International Airport",
+    "line": "LRT-1",
+    "order": 22,
+    "coordinates": { "lat": 14.5123, "lng": 120.9961 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt1-asiaworld",
+    "name": "Asia World",
+    "line": "LRT-1",
+    "order": 23,
+    "coordinates": { "lat": 14.5085, "lng": 120.9922 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt1-ninoy-aquino",
+    "name": "Ninoy Aquino",
+    "line": "LRT-1",
+    "order": 24,
+    "coordinates": { "lat": 14.5011, "lng": 120.9995 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt1-dr-santos",
+    "name": "Dr. Santos",
+    "line": "LRT-1",
+    "order": 25,
+    "coordinates": { "lat": 14.4795, "lng": 121.0143 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt2-recto",
+    "name": "Recto",
+    "line": "LRT-2",
+    "order": 1,
+    "coordinates": { "lat": 14.6038, "lng": 120.9839 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "lrt2-legarda",
+    "name": "Legarda",
+    "line": "LRT-2",
+    "order": 2,
+    "coordinates": { "lat": 14.6008, "lng": 120.9925 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt2-pureza",
+    "name": "Pureza",
+    "line": "LRT-2",
+    "order": 3,
+    "coordinates": { "lat": 14.6017, "lng": 121.0050 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt2-vmapa",
+    "name": "V. Mapa",
+    "line": "LRT-2",
+    "order": 4,
+    "coordinates": { "lat": 14.6025, "lng": 121.0175 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt2-jruiz",
+    "name": "J. Ruiz",
+    "line": "LRT-2",
+    "order": 5,
+    "coordinates": { "lat": 14.6103, "lng": 121.0261 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 1 }
+  },
+  {
+    "id": "lrt2-gilmore",
+    "name": "Gilmore",
+    "line": "LRT-2",
+    "order": 6,
+    "coordinates": { "lat": 14.6136, "lng": 121.0344 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 2, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt2-betty-go",
+    "name": "Betty Go-Belmonte",
+    "line": "LRT-2",
+    "order": 7,
+    "coordinates": { "lat": 14.6186, "lng": 121.0425 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 1 }
+  },
+  {
+    "id": "lrt2-cubao",
+    "name": "Araneta Center-Cubao",
+    "line": "LRT-2",
+    "order": 8,
+    "coordinates": { "lat": 14.6222, "lng": 121.0528 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "lrt2-anonas",
+    "name": "Anonas",
+    "line": "LRT-2",
+    "order": 9,
+    "coordinates": { "lat": 14.6281, "lng": 121.0642 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt2-katipunan",
+    "name": "Katipunan",
+    "line": "LRT-2",
+    "order": 10,
+    "coordinates": { "lat": 14.6319, "lng": 121.0725 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt2-santolan",
+    "name": "Santolan",
+    "line": "LRT-2",
+    "order": 11,
+    "coordinates": { "lat": 14.6219, "lng": 121.0864 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt2-marikina-pasig",
+    "name": "Marikina-Pasig",
+    "line": "LRT-2",
+    "order": 12,
+    "coordinates": { "lat": 14.6181, "lng": 121.1006 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "lrt2-antipolo",
+    "name": "Antipolo",
+    "line": "LRT-2",
+    "order": 13,
+    "coordinates": { "lat": 14.6247, "lng": 121.1219 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "mrt3-north-ave",
+    "name": "North Avenue",
+    "line": "MRT-3",
+    "order": 1,
+    "coordinates": { "lat": 14.6531, "lng": 121.0307 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "mrt3-quezon-ave",
+    "name": "Quezon Avenue",
+    "line": "MRT-3",
+    "order": 2,
+    "coordinates": { "lat": 14.6425, "lng": 121.0384 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "mrt3-kamuning",
+    "name": "GMA-Kamuning",
+    "line": "MRT-3",
+    "order": 3,
+    "coordinates": { "lat": 14.6354, "lng": 121.0431 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "mrt3-cubao",
+    "name": "Araneta Center-Cubao",
+    "line": "MRT-3",
+    "order": 4,
+    "coordinates": { "lat": 14.6194, "lng": 121.0511 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "mrt3-santolan-annapolis",
+    "name": "Santolan-Annapolis",
+    "line": "MRT-3",
+    "order": 5,
+    "coordinates": { "lat": 14.6080, "lng": 121.0567 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "mrt3-ortigas",
+    "name": "Ortigas",
+    "line": "MRT-3",
+    "order": 6,
+    "coordinates": { "lat": 14.5878, "lng": 121.0567 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "mrt3-shaw",
+    "name": "Shaw Boulevard",
+    "line": "MRT-3",
+    "order": 7,
+    "coordinates": { "lat": 14.5813, "lng": 121.0536 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "mrt3-boni",
+    "name": "Boni",
+    "line": "MRT-3",
+    "order": 8,
+    "coordinates": { "lat": 14.5739, "lng": 121.0481 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "mrt3-guadalupe",
+    "name": "Guadalupe",
+    "line": "MRT-3",
+    "order": 9,
+    "coordinates": { "lat": 14.5672, "lng": 121.0456 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "mrt3-buendia",
+    "name": "Buendia",
+    "line": "MRT-3",
+    "order": 10,
+    "coordinates": { "lat": 14.5544, "lng": 121.0344 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "mrt3-ayala",
+    "name": "Ayala",
+    "line": "MRT-3",
+    "order": 11,
+    "coordinates": { "lat": 14.5492, "lng": 121.0281 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  },
+  {
+    "id": "mrt3-magallanes",
+    "name": "Magallanes",
+    "line": "MRT-3",
+    "order": 12,
+    "coordinates": { "lat": 14.5342, "lng": 121.0203 },
+    "historical_baseline": { "morning_peak": 2, "off_peak": 1, "evening_peak": 2 }
+  },
+  {
+    "id": "mrt3-taft",
+    "name": "Taft Avenue",
+    "line": "MRT-3",
+    "order": 13,
+    "coordinates": { "lat": 14.5376, "lng": 121.0014 },
+    "historical_baseline": { "morning_peak": 3, "off_peak": 2, "evening_peak": 3 }
+  }
+]

@@ -1,0 +1,14 @@
+# Python local envs
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# Python cache / bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Trained ML models
+*.joblib
