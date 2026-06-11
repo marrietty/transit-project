@@ -189,6 +189,7 @@ export default function App() {
           activePeriod={activePeriod}
           userReports={userReports}
           onOpenReportModal={setSelectedStation}
+          isOnline={isOnline}
         />
 
         {/* Bottom PWA Info Panel */}
