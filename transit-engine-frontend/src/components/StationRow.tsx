@@ -153,7 +153,7 @@ export const StationRow: React.FC<StationRowProps> = ({
         <div className="flex-1 min-w-0 space-y-1 py-1">
           {/* Header Row: Station Name + Order Badge */}
           <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5">
-            <h3 className="font-bold text-[15px] sm:text-base text-slate-800 dark:text-slate-200 tracking-tight leading-tight">
+            <h3 className="font-extrabold text-[15px] sm:text-base text-slate-800 dark:text-slate-200 tracking-tight leading-tight">
               {station.name}
             </h3>
             <span className="inline-flex text-[9px] font-bold px-1.5 py-0.2 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-sm">
