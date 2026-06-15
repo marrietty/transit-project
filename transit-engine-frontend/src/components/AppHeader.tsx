@@ -18,17 +18,7 @@ export default function AppHeader() {
       <div>
         <div className="flex items-baseline gap-1.5">
           <span className="text-white font-black text-xl tracking-tight leading-none">
-            Commute
-          </span>
-          <span
-            className="text-xl font-black leading-none"
-            style={{
-              background: "linear-gradient(90deg, #1B4FD8, #7C3AED)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            Watch
+            Transpec
           </span>
         </div>
         <p className="text-white/30 text-[10px] font-mono mt-0.5 uppercase tracking-widest">

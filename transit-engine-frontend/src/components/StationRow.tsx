@@ -323,7 +323,7 @@ export const StationRow: React.FC<StationRowProps> = ({
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5">
             <h3 className="font-extrabold text-[15px] sm:text-base text-slate-800 dark:text-slate-200 tracking-tight leading-tight">
-              {station.name} <span className="text-slate-400 dark:text-slate-500 font-medium">· {station.line}</span>
+              {station.name}
             </h3>
             <span className="inline-flex text-[9px] font-bold px-1.5 py-0.2 text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900/50 rounded-sm">
               #{station.order}
