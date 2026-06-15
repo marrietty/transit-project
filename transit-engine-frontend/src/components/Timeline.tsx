@@ -9,6 +9,7 @@ interface TimelineProps {
   activePeriod: 'morning_peak' | 'off_peak' | 'evening_peak';
   userReports: Record<string, UserReport>;
   onOpenReportModal: (station: Station) => void;
+  isOnline: boolean;
 }
 
 export const Timeline: React.FC<TimelineProps> = ({
@@ -17,6 +18,7 @@ export const Timeline: React.FC<TimelineProps> = ({
   activePeriod,
   userReports,
   onOpenReportModal,
+  isOnline,
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isReversed, setIsReversed] = useState<boolean>(false);
@@ -114,10 +116,12 @@ export const Timeline: React.FC<TimelineProps> = ({
           </div>
         </div>
         
-        {/* Statistics badge count */}
-        <span className="text-xs bg-slate-100 dark:bg-slate-900/50 text-slate-600 dark:text-slate-400 px-2.5 py-1 rounded-full border border-slate-200/30 dark:border-slate-800/30">
-          Showing {filteredStations.length} of {lineStations.length}
-        </span>
+        {/* Statistics badge count - only shown when filter is active */}
+        {searchQuery && (
+          <span className="text-xs bg-slate-100 dark:bg-slate-900/50 text-slate-600 dark:text-slate-400 px-2.5 py-1 rounded-full border border-slate-200/30 dark:border-slate-800/30">
+            Found {filteredStations.length} of {lineStations.length}
+          </span>
+        )}
       </div>
 
       {/* Vertical Timeline Wrapper */}
@@ -139,6 +143,7 @@ export const Timeline: React.FC<TimelineProps> = ({
                 isFirst={index === 0}
                 isLast={index === filteredStations.length - 1}
                 onOpenReportModal={onOpenReportModal}
+                isOnline={isOnline}
               />
             );
           })}
