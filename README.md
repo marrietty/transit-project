@@ -126,20 +126,11 @@ The frontend runs on `http://localhost:5173` and the API on `http://localhost:80
 
 ## Datasets
 
-| Dataset | Source | Use |
-|---|---|---|
-| Manila GTFS | [TUMI Datahub](https://ckan.transport-data.org/en_GB/dataset/gtfs-manila) | Authoritative stop and timetable data to replace the hand-coded schedule baseline |
-| Historical ridership mock data | Locally generated | Simulated hourly tap-in/tap-out volumes used to train the crowd forecasting model |
+- **GTFS** — Official Manila GTFS dataset from [TUMI Datahub](https://ckan.transport-data.org/en_GB/dataset/gtfs-manila), used to replace the hand-coded schedule baseline with authoritative stop and timetable data.
+- **Historical ridership mock data** — Simulated hourly tap-in/tap-out volumes used to supplement static GTFS schedules and train the crowd forecasting model.
 
 ---
 
-## Collaborators
-
-| Name | Student ID | Role |
-|---|---|---|
-| — | — | Add team members here |
-
----
 
 ## License
 
