@@ -33,76 +33,86 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({
   onPeriodChange,
   userReports,
 }) => {
-  // Filter stations for the current active line
-  const lineStations = stations.filter((s) => s.line === activeLine);
-  
-  // Calculate distribution of statuses (Clear, Moderate, Heavy)
+  // Helper to calculate a line's general status dynamically
+  const getLineStatus = (lineName: string): string => {
+    const lineStns = stations.filter((s) => s.line === lineName);
+    if (lineStns.length === 0) return 'Unknown';
+    
+    let totalWeight = 0;
+    lineStns.forEach((s) => {
+      const report = userReports[s.id];
+      const isRecent = report && (new Date().getTime() - report.timestamp.getTime()) < 15 * 60 * 1000;
+      totalWeight += isRecent ? report.weight : s.historical_baseline[activePeriod];
+    });
+
+    const average = totalWeight / lineStns.length;
+    if (average >= 2.3) return 'High congestion';
+    if (average >= 1.6) return 'Moderate';
+    return 'Clear';
+  };
+
+  // Calculate dynamic status for LRT-1, LRT-2, and MRT-3
+  const lrt1Status = getLineStatus('LRT-1');
+  const lrt2Status = getLineStatus('LRT-2');
+  const mrt3Status = getLineStatus('MRT-3');
+  const lineStatusSummary = `LRT-1: ${lrt1Status} · LRT-2: ${lrt2Status} · MRT-3: ${mrt3Status}`;
+
+  // Filter stations for the current active line to calculate the clear stations ratio
+  const activeLineStations = stations.filter((s) => s.line === activeLine);
   let clearCount = 0;
-  let moderateCount = 0;
-  let heavyCount = 0;
-
-  lineStations.forEach((station) => {
-    // Determine the current weight (user override vs. historical baseline)
-    const report = userReports[station.id];
-    const isReportRecent = report && (new Date().getTime() - report.timestamp.getTime()) < 15 * 60 * 1000;
-    const currentWeight = isReportRecent ? report.weight : station.historical_baseline[activePeriod];
-
-    if (currentWeight === 3) heavyCount++;
-    else if (currentWeight === 2) moderateCount++;
-    else clearCount++;
+  activeLineStations.forEach((s) => {
+    const report = userReports[s.id];
+    const isRecent = report && (new Date().getTime() - report.timestamp.getTime()) < 15 * 60 * 1000;
+    const currentWeight = isRecent ? report.weight : s.historical_baseline[activePeriod];
+    if (currentWeight === 1) {
+      clearCount++;
+    }
   });
-
-  const total = lineStations.length || 1;
-  const clearPct = Math.round((clearCount / total) * 100);
+  const totalStationsCount = activeLineStations.length || 1;
 
   // Time periods descriptions
   const periodMeta = {
     morning_peak: {
       label: 'Morning Peak',
-      hours: '6:00 AM - 9:00 AM',
-      icon: <Sun className="w-4 h-4 text-amber-500" />,
+      badgeText: 'Morning peak (6–9 AM baseline)',
+      icon: <Sun className="w-3.5 h-3.5 text-amber-500" />,
       theme: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20',
     },
     off_peak: {
       label: 'Off-Peak',
-      hours: '9:00 AM - 5:00 PM',
-      icon: <CloudSun className="w-4 h-4 text-emerald-500" />,
+      badgeText: 'Off-peak (9 AM – 5 PM baseline)',
+      icon: <CloudSun className="w-3.5 h-3.5 text-emerald-500" />,
       theme: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20',
     },
     evening_peak: {
       label: 'Evening Peak',
-      hours: '5:00 PM - 9:00 PM',
-      icon: <Sunset className="w-4 h-4 text-indigo-500" />,
+      badgeText: 'Evening peak (5–9 PM baseline)',
+      icon: <Sunset className="w-3.5 h-3.5 text-indigo-500" />,
       theme: 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-500/20',
     },
   };
 
   return (
     <div className="w-full px-4 pt-6 pb-2 space-y-4">
-      {/* Stats Cards Section */}
-      <div className="grid grid-cols-2 gap-3.5">
-        {/* Card 1: Flow Rate percentage */}
-        <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 flex flex-col justify-between text-left">
-          <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Line Flow Rate</span>
-          <div className="my-1.5 flex items-baseline gap-1">
-            <span className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">{clearPct}%</span>
-            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Clear</span>
-          </div>
-          <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
-            {clearCount} of {total} stations reporting green/clear status.
-          </p>
+      
+      {/* collapsed top stats section - exactly 3 summary chunks in 1 card */}
+      <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 flex flex-col space-y-3.5 text-left shadow-xs">
+        {/* Chunk 1: Line Status Summary */}
+        <div className="text-xs font-extrabold text-slate-800 dark:text-slate-200 tracking-tight leading-snug">
+          {lineStatusSummary}
         </div>
 
-        {/* Card 2: Peak Period Info */}
-        <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 flex flex-col justify-between text-left">
-          <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Historical Timeframe</span>
-          <div className={`my-1.5 flex items-center gap-1.5 self-start px-2 py-0.5 rounded-md border text-xs font-bold ${periodMeta[activePeriod].theme}`}>
+        {/* Chunk 2: Time Context Badge */}
+        <div className="flex items-center gap-1.5 self-start">
+          <span className={`flex items-center gap-1 px-2.5 py-0.5 rounded-md border text-[10px] font-extrabold uppercase tracking-wide ${periodMeta[activePeriod].theme}`}>
             {periodMeta[activePeriod].icon}
-            <span>{periodMeta[activePeriod].label}</span>
-          </div>
-          <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
-            Baselines matching {periodMeta[activePeriod].hours} commutes.
-          </p>
+            <span>{periodMeta[activePeriod].badgeText}</span>
+          </span>
+        </div>
+
+        {/* Chunk 3: Clear Stations Ratio */}
+        <div className="text-[11px] text-slate-500 dark:text-slate-400 font-bold pl-0.5">
+          {clearCount} of {totalStationsCount} stations clear
         </div>
       </div>
 

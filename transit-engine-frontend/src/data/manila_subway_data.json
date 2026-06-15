@@ -1,0 +1,662 @@
+{
+  "lines": [
+    {
+      "id": "lrt1",
+      "name": "LRT-1",
+      "full_name": "LRT Line 1 (Green Line)",
+      "color": "#eab308",
+      "text_color": "#ffffff",
+      "headway": "Every 3.5-5 mins",
+      "stations": [
+        {
+          "id": "LTFRB_4944",
+          "sequence": 1,
+          "name": "Baclaran",
+          "full_name": "Baclaran LRT",
+          "coordinates": {
+            "lat": 14.5339,
+            "lng": 120.998
+          },
+          "transfer_lines": [],
+          "first_train": "05:00",
+          "last_train": "22:49",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4945",
+          "sequence": 2,
+          "name": "EDSA",
+          "full_name": "EDSA LRT",
+          "coordinates": {
+            "lat": 14.5381,
+            "lng": 121.001
+          },
+          "transfer_lines": [
+            "MRT-3"
+          ],
+          "first_train": "05:01",
+          "last_train": "22:48",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4946",
+          "sequence": 3,
+          "name": "Libertad",
+          "full_name": "Libertad LRT",
+          "coordinates": {
+            "lat": 14.5479,
+            "lng": 120.999
+          },
+          "transfer_lines": [],
+          "first_train": "05:03",
+          "last_train": "22:45",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4947",
+          "sequence": 4,
+          "name": "Gil Puyat",
+          "full_name": "Gil Puyat LRT",
+          "coordinates": {
+            "lat": 14.5543,
+            "lng": 120.997
+          },
+          "transfer_lines": [],
+          "first_train": "05:05",
+          "last_train": "22:43",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4948",
+          "sequence": 5,
+          "name": "Vito Cruz",
+          "full_name": "Vito Cruz LRT",
+          "coordinates": {
+            "lat": 14.5636,
+            "lng": 120.995
+          },
+          "transfer_lines": [],
+          "first_train": "05:08",
+          "last_train": "22:40",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4949",
+          "sequence": 6,
+          "name": "Quirino Ave",
+          "full_name": "Quirino Ave LRT",
+          "coordinates": {
+            "lat": 14.5703,
+            "lng": 120.992
+          },
+          "transfer_lines": [],
+          "first_train": "05:11",
+          "last_train": "22:38",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4950",
+          "sequence": 7,
+          "name": "Pedro Gil",
+          "full_name": "Pedro Gil LRT",
+          "coordinates": {
+            "lat": 14.5763,
+            "lng": 120.988
+          },
+          "transfer_lines": [],
+          "first_train": "05:13",
+          "last_train": "22:36",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4951",
+          "sequence": 8,
+          "name": "UN Ave",
+          "full_name": "UN Ave LRT",
+          "coordinates": {
+            "lat": 14.5826,
+            "lng": 120.985
+          },
+          "transfer_lines": [],
+          "first_train": "05:15",
+          "last_train": "22:34",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4952",
+          "sequence": 9,
+          "name": "Central Terminal",
+          "full_name": "Central Terminal LRT",
+          "coordinates": {
+            "lat": 14.5928,
+            "lng": 120.982
+          },
+          "transfer_lines": [],
+          "first_train": "05:18",
+          "last_train": "22:31",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4953",
+          "sequence": 10,
+          "name": "Carriedo",
+          "full_name": "Carriedo LRT",
+          "coordinates": {
+            "lat": 14.5991,
+            "lng": 120.981
+          },
+          "transfer_lines": [],
+          "first_train": "05:20",
+          "last_train": "22:29",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4954",
+          "sequence": 11,
+          "name": "Doroteo Jose",
+          "full_name": "Doroteo Jose LRT",
+          "coordinates": {
+            "lat": 14.6053,
+            "lng": 120.982
+          },
+          "transfer_lines": [
+            "LRT-2"
+          ],
+          "first_train": "05:22",
+          "last_train": "22:27",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4955",
+          "sequence": 12,
+          "name": "Bambang",
+          "full_name": "Bambang LRT",
+          "coordinates": {
+            "lat": 14.6109,
+            "lng": 120.982
+          },
+          "transfer_lines": [],
+          "first_train": "05:24",
+          "last_train": "22:25",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4956",
+          "sequence": 13,
+          "name": "Tayuman",
+          "full_name": "Tayuman LRT",
+          "coordinates": {
+            "lat": 14.6168,
+            "lng": 120.983
+          },
+          "transfer_lines": [],
+          "first_train": "05:22",
+          "last_train": "22:23",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4957",
+          "sequence": 14,
+          "name": "Blumentritt",
+          "full_name": "Blumentritt LRT",
+          "coordinates": {
+            "lat": 14.6228,
+            "lng": 120.983
+          },
+          "transfer_lines": [],
+          "first_train": "05:21",
+          "last_train": "22:21",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4958",
+          "sequence": 15,
+          "name": "Abad Santos",
+          "full_name": "Abad Santos LRT",
+          "coordinates": {
+            "lat": 14.6306,
+            "lng": 120.982
+          },
+          "transfer_lines": [],
+          "first_train": "05:18",
+          "last_train": "22:19",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4959",
+          "sequence": 16,
+          "name": "R. Papa",
+          "full_name": "R. Papa LRT",
+          "coordinates": {
+            "lat": 14.636,
+            "lng": 120.982
+          },
+          "transfer_lines": [],
+          "first_train": "05:16",
+          "last_train": "22:17",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4960",
+          "sequence": 17,
+          "name": "5th Ave",
+          "full_name": "5th Ave LRT",
+          "coordinates": {
+            "lat": 14.6444,
+            "lng": 120.984
+          },
+          "transfer_lines": [],
+          "first_train": "05:14",
+          "last_train": "22:14",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4961",
+          "sequence": 18,
+          "name": "Monumento",
+          "full_name": "Monumento LRT",
+          "coordinates": {
+            "lat": 14.6561,
+            "lng": 120.984
+          },
+          "transfer_lines": [],
+          "first_train": "05:11",
+          "last_train": "22:11",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4962",
+          "sequence": 19,
+          "name": "LRT Balintawak",
+          "full_name": "LRT Balintawak",
+          "coordinates": {
+            "lat": 14.6574,
+            "lng": 121.004
+          },
+          "transfer_lines": [],
+          "first_train": "05:05",
+          "last_train": "22:14",
+          "line_id": "lrt1"
+        },
+        {
+          "id": "LTFRB_4963",
+          "sequence": 20,
+          "name": "Roosevelt",
+          "full_name": "Roosevelt LRT",
+          "coordinates": {
+            "lat": 14.6575,
+            "lng": 121.022
+          },
+          "transfer_lines": [],
+          "first_train": "05:00",
+          "last_train": "22:19",
+          "line_id": "lrt1"
+        }
+      ]
+    },
+    {
+      "id": "lrt2",
+      "name": "LRT-2",
+      "full_name": "LRT Line 2 (Purple Line)",
+      "color": "#a855f7",
+      "text_color": "#ffffff",
+      "headway": "Every 5-8 mins",
+      "stations": [
+        {
+          "id": "LTFRB_4977",
+          "sequence": 1,
+          "name": "Recto",
+          "full_name": "Recto LRT",
+          "coordinates": {
+            "lat": 14.6035078518,
+            "lng": 120.9834301472
+          },
+          "transfer_lines": [
+            "LRT-1"
+          ],
+          "first_train": "05:00",
+          "last_train": "22:03",
+          "line_id": "lrt2"
+        },
+        {
+          "id": "LTFRB_4978",
+          "sequence": 2,
+          "name": "Legarda",
+          "full_name": "Legarda LRT",
+          "coordinates": {
+            "lat": 14.600777309,
+            "lng": 120.9924852848
+          },
+          "transfer_lines": [],
+          "first_train": "05:02",
+          "last_train": "22:03",
+          "line_id": "lrt2"
+        },
+        {
+          "id": "LTFRB_4979",
+          "sequence": 3,
+          "name": "Pureza",
+          "full_name": "Pureza LRT",
+          "coordinates": {
+            "lat": 14.6017324837,
+            "lng": 121.005038023
+          },
+          "transfer_lines": [],
+          "first_train": "05:06",
+          "last_train": "22:07",
+          "line_id": "lrt2"
+        },
+        {
+          "id": "LTFRB_4980",
+          "sequence": 4,
+          "name": "V. Mapa",
+          "full_name": "V. Mapa LRT",
+          "coordinates": {
+            "lat": 14.6042,
+            "lng": 121.017
+          },
+          "transfer_lines": [],
+          "first_train": "05:10",
+          "last_train": "22:10",
+          "line_id": "lrt2"
+        },
+        {
+          "id": "LTFRB_4981",
+          "sequence": 5,
+          "name": "J. Ruiz",
+          "full_name": "J. Ruiz LRT",
+          "coordinates": {
+            "lat": 14.6105,
+            "lng": 121.026
+          },
+          "transfer_lines": [],
+          "first_train": "05:13",
+          "last_train": "22:14",
+          "line_id": "lrt2"
+        },
+        {
+          "id": "LTFRB_4982",
+          "sequence": 6,
+          "name": "Gilmore",
+          "full_name": "Gilmore LRT",
+          "coordinates": {
+            "lat": 14.6136,
+            "lng": 121.034
+          },
+          "transfer_lines": [],
+          "first_train": "05:16",
+          "last_train": "22:16",
+          "line_id": "lrt2"
+        },
+        {
+          "id": "LTFRB_4983",
+          "sequence": 7,
+          "name": "Betty Go Belmonte",
+          "full_name": "Betty Go Belmonte LRT",
+          "coordinates": {
+            "lat": 14.6185,
+            "lng": 121.043
+          },
+          "transfer_lines": [],
+          "first_train": "05:13",
+          "last_train": "22:19",
+          "line_id": "lrt2"
+        },
+        {
+          "id": "LTFRB_4984",
+          "sequence": 8,
+          "name": "Cubao",
+          "full_name": "Cubao LRT",
+          "coordinates": {
+            "lat": 14.6227,
+            "lng": 121.053
+          },
+          "transfer_lines": [
+            "MRT-3"
+          ],
+          "first_train": "05:10",
+          "last_train": "22:23",
+          "line_id": "lrt2"
+        },
+        {
+          "id": "LTFRB_4985",
+          "sequence": 9,
+          "name": "Anonas",
+          "full_name": "Anonas LRT",
+          "coordinates": {
+            "lat": 14.628,
+            "lng": 121.065
+          },
+          "transfer_lines": [],
+          "first_train": "05:06",
+          "last_train": "22:27",
+          "line_id": "lrt2"
+        },
+        {
+          "id": "LTFRB_4986",
+          "sequence": 10,
+          "name": "Katipunan",
+          "full_name": "Katipunan LRT",
+          "coordinates": {
+            "lat": 14.631,
+            "lng": 121.073
+          },
+          "transfer_lines": [],
+          "first_train": "05:04",
+          "last_train": "22:29",
+          "line_id": "lrt2"
+        },
+        {
+          "id": "LTFRB_4987",
+          "sequence": 11,
+          "name": "Santolan",
+          "full_name": "Santolan LRT",
+          "coordinates": {
+            "lat": 14.6223,
+            "lng": 121.086
+          },
+          "transfer_lines": [],
+          "first_train": "05:00",
+          "last_train": "22:33",
+          "line_id": "lrt2"
+        }
+      ]
+    },
+    {
+      "id": "mrt3",
+      "name": "MRT-3",
+      "full_name": "MRT Line 3 (Blue Line)",
+      "color": "#3b82f6",
+      "text_color": "#ffffff",
+      "headway": "Every 3-6 mins",
+      "stations": [
+        {
+          "id": "LTFRB_4976",
+          "sequence": 1,
+          "name": "Taft Ave",
+          "full_name": "Taft Ave MRT",
+          "coordinates": {
+            "lat": 14.5376,
+            "lng": 121.001
+          },
+          "transfer_lines": [
+            "LRT-1"
+          ],
+          "first_train": "05:30",
+          "last_train": "23:27",
+          "line_id": "mrt3"
+        },
+        {
+          "id": "LTFRB_4975",
+          "sequence": 2,
+          "name": "Magellanes",
+          "full_name": "Magellanes MRT",
+          "coordinates": {
+            "lat": 14.5421,
+            "lng": 121.02
+          },
+          "transfer_lines": [],
+          "first_train": "05:35",
+          "last_train": "23:22",
+          "line_id": "mrt3"
+        },
+        {
+          "id": "LTFRB_4974",
+          "sequence": 3,
+          "name": "Ayala",
+          "full_name": "Ayala MRT",
+          "coordinates": {
+            "lat": 14.5492,
+            "lng": 121.028
+          },
+          "transfer_lines": [],
+          "first_train": "05:36",
+          "last_train": "23:20",
+          "line_id": "mrt3"
+        },
+        {
+          "id": "LTFRB_4973",
+          "sequence": 4,
+          "name": "Buendia",
+          "full_name": "Buendia MRT",
+          "coordinates": {
+            "lat": 14.5541,
+            "lng": 121.034
+          },
+          "transfer_lines": [],
+          "first_train": "05:38",
+          "last_train": "23:18",
+          "line_id": "mrt3"
+        },
+        {
+          "id": "LTFRB_4972",
+          "sequence": 5,
+          "name": "Guadalupe",
+          "full_name": "Guadalupe MRT",
+          "coordinates": {
+            "lat": 14.5666,
+            "lng": 121.045
+          },
+          "transfer_lines": [],
+          "first_train": "05:41",
+          "last_train": "23:16",
+          "line_id": "mrt3"
+        },
+        {
+          "id": "LTFRB_4971",
+          "sequence": 6,
+          "name": "Boni",
+          "full_name": "Boni MRT",
+          "coordinates": {
+            "lat": 14.5729,
+            "lng": 121.048
+          },
+          "transfer_lines": [],
+          "first_train": "05:42",
+          "last_train": "23:14",
+          "line_id": "mrt3"
+        },
+        {
+          "id": "LTFRB_4970",
+          "sequence": 7,
+          "name": "Shaw",
+          "full_name": "Shaw MRT",
+          "coordinates": {
+            "lat": 14.581,
+            "lng": 121.054
+          },
+          "transfer_lines": [],
+          "first_train": "05:42",
+          "last_train": "23:14",
+          "line_id": "mrt3"
+        },
+        {
+          "id": "LTFRB_4969",
+          "sequence": 8,
+          "name": "Ortigas",
+          "full_name": "Ortigas MRT",
+          "coordinates": {
+            "lat": 14.5878,
+            "lng": 121.057
+          },
+          "transfer_lines": [],
+          "first_train": "05:41",
+          "last_train": "23:16",
+          "line_id": "mrt3"
+        },
+        {
+          "id": "LTFRB_4968",
+          "sequence": 9,
+          "name": "Santolan",
+          "full_name": "Santolan MRT",
+          "coordinates": {
+            "lat": 14.6075,
+            "lng": 121.057
+          },
+          "transfer_lines": [],
+          "first_train": "05:38",
+          "last_train": "23:19",
+          "line_id": "mrt3"
+        },
+        {
+          "id": "LTFRB_4967",
+          "sequence": 10,
+          "name": "Cubao",
+          "full_name": "Cubao MRT",
+          "coordinates": {
+            "lat": 14.6194,
+            "lng": 121.051
+          },
+          "transfer_lines": [
+            "LRT-2"
+          ],
+          "first_train": "05:35",
+          "last_train": "23:21",
+          "line_id": "mrt3"
+        },
+        {
+          "id": "LTFRB_4966",
+          "sequence": 11,
+          "name": "Kamuning",
+          "full_name": "Kamuning MRT",
+          "coordinates": {
+            "lat": 14.6352,
+            "lng": 121.043
+          },
+          "transfer_lines": [],
+          "first_train": "05:33",
+          "last_train": "23:24",
+          "line_id": "mrt3"
+        },
+        {
+          "id": "LTFRB_4965",
+          "sequence": 12,
+          "name": "Quezon",
+          "full_name": "Quezon MRT",
+          "coordinates": {
+            "lat": 14.6426,
+            "lng": 121.039
+          },
+          "transfer_lines": [],
+          "first_train": "05:31",
+          "last_train": "23:25",
+          "line_id": "mrt3"
+        },
+        {
+          "id": "STOP_880847",
+          "sequence": 13,
+          "name": "North Avenue",
+          "full_name": "North Avenue MRT",
+          "coordinates": {
+            "lat": 14.6517695249,
+            "lng": 121.0323429108
+          },
+          "transfer_lines": [],
+          "first_train": "05:30",
+          "last_train": "23:27",
+          "line_id": "mrt3"
+        }
+      ]
+    }
+  ]
+}
