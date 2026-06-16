@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRightLeft, MessageSquarePlus, Clock } from 'lucide-react';
 import subwayData from '../data/manila_subway_data.json';
 
@@ -173,6 +173,42 @@ export const StationRow: React.FC<StationRowProps> = ({
   isOnline,
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+  // Live predictions state
+  const [prediction, setPrediction] = useState<{
+    congestion_level: string;
+    predicted_volume: number;
+    live_reports_count: number;
+  } | null>(null);
+  const [predictionLoading, setPredictionLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!isExpanded) return;
+
+    setPredictionLoading(true);
+    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const backendUrl = `${apiBaseUrl}/api/status/${station.id}`;
+
+    fetch(backendUrl)
+      .then((res) => {
+        if (!res.ok) throw new Error('API error');
+        return res.json();
+      })
+      .then((data) => {
+        setPrediction({
+          congestion_level: data.congestion_level,
+          predicted_volume: data.predicted_volume,
+          live_reports_count: data.live_reports_count,
+        });
+      })
+      .catch((err) => {
+        console.error('Error fetching prediction for station:', station.id, err);
+        setPrediction(null);
+      })
+      .finally(() => {
+        setPredictionLoading(false);
+      });
+  }, [isExpanded, station.id]);
 
   // Status configuration mapping
   const getStatusConfig = (weight: number) => {
@@ -393,6 +429,46 @@ export const StationRow: React.FC<StationRowProps> = ({
         {/* Row 4: Progressive Disclosure Accordion Panels */}
         {isExpanded && (
           <div className="mt-3.5 pt-3.5 border-t border-slate-100 dark:border-slate-800/60 flex flex-col space-y-2 animate-fadeIn text-left text-xs text-slate-500 dark:text-slate-400">
+            {/* Live ML Prediction Block */}
+            <div className={`p-3 rounded-xl border text-left transition-all duration-300 shadow-2xs ${
+              predictionLoading 
+                ? 'bg-slate-50 dark:bg-slate-900/40 border-slate-200/50 dark:border-slate-800/50 text-slate-500'
+                : prediction?.congestion_level === 'Low'
+                  ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 dark:border-emerald-500/10'
+                  : prediction?.congestion_level === 'Medium'
+                    ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20 dark:border-amber-500/10'
+                    : prediction?.congestion_level === 'High'
+                      ? 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20 dark:border-red-500/10'
+                      : prediction?.congestion_level === 'Critical'
+                        ? 'bg-rose-600/20 text-rose-700 dark:text-rose-400 border-rose-500/30 dark:border-rose-500/20 font-bold animate-pulse'
+                        : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500'
+            }`}>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Live ML Forecast</span>
+                {predictionLoading && <span className="text-[9px] font-bold text-slate-400 animate-pulse">Updating...</span>}
+              </div>
+              {prediction ? (
+                <div className="space-y-1 text-[11px] font-semibold">
+                  <div className="flex justify-between items-center">
+                    <span>Congestion Level:</span>
+                    <strong className="text-slate-800 dark:text-slate-100 font-extrabold text-xs">{prediction.congestion_level}</strong>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Predicted Volume:</span>
+                    <strong className="text-slate-800 dark:text-slate-100">{Math.round(prediction.predicted_volume).toLocaleString()} entries/hr</strong>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Active Reports (30m):</span>
+                    <strong className="text-slate-800 dark:text-slate-100">{prediction.live_reports_count} reports</strong>
+                  </div>
+                </div>
+              ) : (
+                <span className="text-[11px] text-slate-400">
+                  {predictionLoading ? 'Fetching predictions...' : 'ML forecast unavailable (offline).'}
+                </span>
+              )}
+            </div>
+
             {/* Operating Times normalized to 12h format */}
             {timetable && (
               <div className="grid grid-cols-2 gap-2">
