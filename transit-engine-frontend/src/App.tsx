@@ -18,6 +18,14 @@ export default function App() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
 
+  // Real-time crowd forecasting states fed from FastAPI model
+  const [prediction, setPrediction] = useState<{
+    congestion_level: string;
+    predicted_volume: number;
+    live_reports_count: number;
+  } | null>(null);
+  const [predictionLoading, setPredictionLoading] = useState<boolean>(false);
+
   // Monitor network status for PWA UX
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -41,6 +49,40 @@ export default function App() {
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
+
+  // Fetch real-time predictions from the FastAPI regression model when selectedStation changes
+  useEffect(() => {
+    if (!selectedStation) {
+      setPrediction(null);
+      return;
+    }
+
+    setPredictionLoading(true);
+    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const backendUrl = `${apiBaseUrl}/api/status/${selectedStation.id}`;
+
+    fetch(backendUrl)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Backend error or model not loaded.');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setPrediction({
+          congestion_level: data.congestion_level,
+          predicted_volume: data.predicted_volume,
+          live_reports_count: data.live_reports_count,
+        });
+      })
+      .catch((err) => {
+        console.error('Error fetching prediction:', err);
+        showToast('Offline or ML backend unreachable.');
+      })
+      .finally(() => {
+        setPredictionLoading(false);
+      });
+  }, [selectedStation]);
 
   // Show status toasts
   const showToast = (message: string) => {
@@ -181,6 +223,70 @@ export default function App() {
           stationCounts={stationCounts}
           lineCongestions={lineCongestions}
         />
+
+        {/* Dynamic ML Prediction Card */}
+        {selectedStation && (
+          <div className="px-4 py-2">
+            <div className={`p-4 rounded-2xl border text-left transition-all duration-300 shadow-xs ${
+              predictionLoading 
+                ? 'bg-slate-50 dark:bg-slate-900/40 border-slate-200/50 dark:border-slate-800/50 text-slate-500'
+                : prediction?.congestion_level === 'Low'
+                  ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 dark:border-emerald-500/10'
+                  : prediction?.congestion_level === 'Medium'
+                    ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20 dark:border-amber-500/10'
+                    : prediction?.congestion_level === 'High'
+                      ? 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20 dark:border-red-500/10'
+                      : prediction?.congestion_level === 'Critical'
+                        ? 'bg-rose-600/20 text-rose-700 dark:text-rose-400 border-rose-500/30 dark:border-rose-500/20 font-bold animate-pulse'
+                        : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500'
+            }`}>
+              <div className="flex justify-between items-start">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">ML Crowd Forecasting Model</span>
+                  <h4 className="font-extrabold text-base tracking-tight text-slate-800 dark:text-slate-200">
+                    {selectedStation.name} Status
+                  </h4>
+                </div>
+                <button 
+                  onClick={() => setSelectedStation(null)}
+                  className="text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                >
+                  Clear
+                </button>
+              </div>
+
+              {predictionLoading ? (
+                <div className="flex items-center gap-2 mt-3 text-xs text-slate-500 dark:text-slate-400 font-medium animate-pulse">
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <span>Updating crowd predictions...</span>
+                </div>
+              ) : prediction ? (
+                <div className="mt-3.5 space-y-2 text-xs font-semibold">
+                  <div className="flex justify-between items-center py-1 border-b border-slate-100/50 dark:border-slate-800/30">
+                    <span className="opacity-80">Congestion Level:</span>
+                    <span className="font-extrabold text-sm">{prediction.congestion_level}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1 border-b border-slate-100/50 dark:border-slate-800/30">
+                    <span className="opacity-80">Predicted Passenger Flow:</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-100">
+                      {Math.round(prediction.predicted_volume).toLocaleString()} entries/hr
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center py-1">
+                    <span className="opacity-80">Live Crowd Reports (past 30m):</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-100">
+                      {prediction.live_reports_count} reports
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-2 text-xs text-red-500 font-medium">
+                  Failed to fetch status prediction.
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Rails Vertical Timeline */}
         <Timeline
