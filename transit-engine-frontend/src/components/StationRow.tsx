@@ -31,6 +31,7 @@ interface StationRowProps {
   isLast: boolean;
   onOpenReportModal: (station: Station) => void;
   isOnline: boolean;
+  refetchTrigger?: number;
 }
 
 interface GTFSStation {
@@ -171,6 +172,7 @@ export const StationRow: React.FC<StationRowProps> = ({
   isLast,
   onOpenReportModal,
   isOnline,
+  refetchTrigger,
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
@@ -208,7 +210,7 @@ export const StationRow: React.FC<StationRowProps> = ({
       .finally(() => {
         setPredictionLoading(false);
       });
-  }, [isExpanded, station.id]);
+  }, [isExpanded, station.id, userReport, refetchTrigger]);
 
   // Status configuration mapping
   const getStatusConfig = (weight: number) => {
@@ -244,7 +246,30 @@ export const StationRow: React.FC<StationRowProps> = ({
     }
   };
 
-  const status = getStatusConfig(currentWeight);
+  // Color configuration should reflect ML forecast when available
+  const displayWeight = (() => {
+    if (prediction) {
+      if (prediction.congestion_level === 'Low') return 1;
+      if (prediction.congestion_level === 'Medium') return 2;
+      if (prediction.congestion_level === 'High') return 3;
+      if (prediction.congestion_level === 'Critical') return 3;
+    }
+    return currentWeight;
+  })();
+
+  const status = getStatusConfig(displayWeight);
+
+  // Wait minutes estimation should follow the display weight
+  const displayWaitMinutes = (() => {
+    if (prediction) {
+      if (userReport) return estimatedWaitMinutes;
+      if (prediction.congestion_level === 'Low') return 3;
+      if (prediction.congestion_level === 'Medium') return 12;
+      if (prediction.congestion_level === 'High') return 25;
+      if (prediction.congestion_level === 'Critical') return 45;
+    }
+    return estimatedWaitMinutes;
+  })();
 
   // Line brand line-connector colors
   const getLineColorClass = (line: string) => {
@@ -338,7 +363,7 @@ export const StationRow: React.FC<StationRowProps> = ({
           {/* Inner core circle with status color */}
           <div 
             className={`w-3.5 h-3.5 rounded-full ${status.bg} transition-all duration-300 ${
-              currentWeight === 3 ? 'status-active-pulse' : ''
+              displayWeight === 3 ? 'status-active-pulse' : ''
             }`}
           />
         </div>
@@ -404,7 +429,7 @@ export const StationRow: React.FC<StationRowProps> = ({
             {/* Status Pill (Human-readable Wait Times) */}
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-bold tracking-wide ${status.badgeBg} ${status.text} ${status.border}`}>
               <span className={`w-1.5 h-1.5 rounded-full ${status.bg}`} />
-              {status.label} (~{estimatedWaitMinutes} min)
+              {status.label} (~{displayWaitMinutes} min)
             </span>
 
             {/* Next Train Countdown Estimation */}

@@ -10,6 +10,7 @@ interface TimelineProps {
   userReports: Record<string, UserReport>;
   onOpenReportModal: (station: Station) => void;
   isOnline: boolean;
+  refetchTrigger?: number;
 }
 
 export const Timeline: React.FC<TimelineProps> = ({
@@ -19,6 +20,7 @@ export const Timeline: React.FC<TimelineProps> = ({
   userReports,
   onOpenReportModal,
   isOnline,
+  refetchTrigger,
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isReversed, setIsReversed] = useState<boolean>(false);
@@ -144,6 +146,7 @@ export const Timeline: React.FC<TimelineProps> = ({
                 isLast={index === filteredStations.length - 1}
                 onOpenReportModal={onOpenReportModal}
                 isOnline={isOnline}
+                refetchTrigger={refetchTrigger}
               />
             );
           })}
