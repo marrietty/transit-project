@@ -17,6 +17,42 @@ export default function App() {
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+  const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
+
+  // Real-time crowd forecasting states fed from FastAPI model
+  const [prediction, setPrediction] = useState<{
+    congestion_level: string;
+    predicted_volume: number;
+    live_reports_count: number;
+  } | null>(null);
+  const [predictionLoading, setPredictionLoading] = useState<boolean>(false);
+
+  // Fetch all active user reports from database on mount to restore them on refresh
+  useEffect(() => {
+    if (!isOnline) return;
+
+    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    fetch(`${apiBaseUrl}/api/reports`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch initial reports');
+        return res.json();
+      })
+      .then((data) => {
+        const mapped: Record<string, UserReport> = {};
+        Object.keys(data).forEach((sid) => {
+          mapped[sid] = {
+            weight: data[sid].weight,
+            minutes: data[sid].minutes,
+            note: data[sid].note,
+            timestamp: new Date(data[sid].timestamp),
+          };
+        });
+        setUserReports(mapped);
+      })
+      .catch((err) => {
+        console.error('Error fetching initial reports:', err);
+      });
+  }, [isOnline]);
 
   // Monitor network status for PWA UX
   useEffect(() => {
@@ -42,6 +78,40 @@ export default function App() {
     };
   }, []);
 
+  // Fetch real-time predictions from the FastAPI regression model when selectedStation changes or refetchTrigger updates
+  useEffect(() => {
+    if (!selectedStation) {
+      setPrediction(null);
+      return;
+    }
+
+    setPredictionLoading(true);
+    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const backendUrl = `${apiBaseUrl}/api/status/${selectedStation.id}`;
+
+    fetch(backendUrl)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Backend error or model not loaded.');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setPrediction({
+          congestion_level: data.congestion_level,
+          predicted_volume: data.predicted_volume,
+          live_reports_count: data.live_reports_count,
+        });
+      })
+      .catch((err) => {
+        console.error('Error fetching prediction:', err);
+        showToast('Offline or ML backend unreachable.');
+      })
+      .finally(() => {
+        setPredictionLoading(false);
+      });
+  }, [selectedStation, refetchTrigger]);
+
   // Show status toasts
   const showToast = (message: string) => {
     setToastMessage(message);
@@ -63,6 +133,30 @@ export default function App() {
         timestamp: new Date(),
       },
     }));
+
+    // Post to backend database if online
+    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    fetch(`${apiBaseUrl}/api/report`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        station_id: stationId,
+        congestion_level: weight,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to submit report to database');
+        return res.json();
+      })
+      .then(() => {
+        console.log('Report submitted successfully to database.');
+        setRefetchTrigger((prev) => prev + 1);
+      })
+      .catch((err) => {
+        console.error('Error submitting report to database:', err);
+      });
 
     const statusLabel = weight === 3 ? 'Heavy' : weight === 2 ? 'Moderate' : 'Clear';
     showToast(`Submitted: ${stationName} is currently ${statusLabel} (${minutes}m wait)`);
@@ -134,7 +228,7 @@ export default function App() {
   return (
     <div className="w-full min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
       
-      {/* Top Banner: Connection status & Crowdsource simulation button */}
+      {/* Top Banner: Connection status & Crowdsource simulation button
       <div className="w-full bg-slate-900 text-slate-100 text-xs px-4 py-2 flex justify-between items-center z-30 shadow-sm">
         <div className="flex items-center gap-1.5 font-semibold">
           {isOnline ? (
@@ -157,7 +251,7 @@ export default function App() {
           <RefreshCw className="w-3 h-3" />
           <span>Simulate Commuter Feeds</span>
         </button>
-      </div>
+      </div> */}
 
       {/* Main app boundary */}
       <div className="w-full max-w-md mx-auto flex-1 flex flex-col bg-white dark:bg-[#0b101c] shadow-xl relative min-h-full border-x border-slate-100 dark:border-slate-900">
@@ -182,6 +276,70 @@ export default function App() {
           lineCongestions={lineCongestions}
         />
 
+        {/* Dynamic ML Prediction Card */}
+        {selectedStation && (
+          <div className="px-4 py-2">
+            <div className={`p-4 rounded-2xl border text-left transition-all duration-300 shadow-xs ${
+              predictionLoading 
+                ? 'bg-slate-50 dark:bg-slate-900/40 border-slate-200/50 dark:border-slate-800/50 text-slate-500'
+                : prediction?.congestion_level === 'Low'
+                  ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 dark:border-emerald-500/10'
+                  : prediction?.congestion_level === 'Medium'
+                    ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20 dark:border-amber-500/10'
+                    : prediction?.congestion_level === 'High'
+                      ? 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20 dark:border-red-500/10'
+                      : prediction?.congestion_level === 'Critical'
+                        ? 'bg-rose-600/20 text-rose-700 dark:text-rose-400 border-rose-500/30 dark:border-rose-500/20 font-bold animate-pulse'
+                        : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500'
+            }`}>
+              <div className="flex justify-between items-start">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">ML Crowd Forecasting Model</span>
+                  <h4 className="font-extrabold text-base tracking-tight text-slate-800 dark:text-slate-200">
+                    {selectedStation.name} Status
+                  </h4>
+                </div>
+                <button 
+                  onClick={() => setSelectedStation(null)}
+                  className="text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                >
+                  Clear
+                </button>
+              </div>
+
+              {predictionLoading ? (
+                <div className="flex items-center gap-2 mt-3 text-xs text-slate-500 dark:text-slate-400 font-medium animate-pulse">
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <span>Updating crowd predictions...</span>
+                </div>
+              ) : prediction ? (
+                <div className="mt-3.5 space-y-2 text-xs font-semibold">
+                  <div className="flex justify-between items-center py-1 border-b border-slate-100/50 dark:border-slate-800/30">
+                    <span className="opacity-80">Congestion Level:</span>
+                    <span className="font-extrabold text-sm">{prediction.congestion_level}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1 border-b border-slate-100/50 dark:border-slate-800/30">
+                    <span className="opacity-80">Predicted Passenger Flow:</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-100">
+                      {Math.round(prediction.predicted_volume).toLocaleString()} entries/hr
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center py-1">
+                    <span className="opacity-80">Live Crowd Reports (past 30m):</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-100">
+                      {prediction.live_reports_count} reports
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-2 text-xs text-red-500 font-medium">
+                  Failed to fetch status prediction.
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Rails Vertical Timeline */}
         <Timeline
           stations={stationsData}
@@ -190,6 +348,7 @@ export default function App() {
           userReports={userReports}
           onOpenReportModal={setSelectedStation}
           isOnline={isOnline}
+          refetchTrigger={refetchTrigger}
         />
 
         {/* Bottom PWA Info Panel */}

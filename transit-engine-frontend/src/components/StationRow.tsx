@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRightLeft, MessageSquarePlus, Clock } from 'lucide-react';
 import subwayData from '../data/manila_subway_data.json';
 
@@ -31,6 +31,7 @@ interface StationRowProps {
   isLast: boolean;
   onOpenReportModal: (station: Station) => void;
   isOnline: boolean;
+  refetchTrigger?: number;
 }
 
 interface GTFSStation {
@@ -171,8 +172,45 @@ export const StationRow: React.FC<StationRowProps> = ({
   isLast,
   onOpenReportModal,
   isOnline,
+  refetchTrigger,
 }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+  // Live predictions state
+  const [prediction, setPrediction] = useState<{
+    congestion_level: string;
+    predicted_volume: number;
+    live_reports_count: number;
+  } | null>(null);
+  const [predictionLoading, setPredictionLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!isExpanded) return;
+
+    setPredictionLoading(true);
+    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const backendUrl = `${apiBaseUrl}/api/status/${station.id}`;
+
+    fetch(backendUrl)
+      .then((res) => {
+        if (!res.ok) throw new Error('API error');
+        return res.json();
+      })
+      .then((data) => {
+        setPrediction({
+          congestion_level: data.congestion_level,
+          predicted_volume: data.predicted_volume,
+          live_reports_count: data.live_reports_count,
+        });
+      })
+      .catch((err) => {
+        console.error('Error fetching prediction for station:', station.id, err);
+        setPrediction(null);
+      })
+      .finally(() => {
+        setPredictionLoading(false);
+      });
+  }, [isExpanded, station.id, userReport, refetchTrigger]);
 
   // Status configuration mapping
   const getStatusConfig = (weight: number) => {
@@ -208,7 +246,30 @@ export const StationRow: React.FC<StationRowProps> = ({
     }
   };
 
-  const status = getStatusConfig(currentWeight);
+  // Color configuration should reflect ML forecast when available
+  const displayWeight = (() => {
+    if (prediction) {
+      if (prediction.congestion_level === 'Low') return 1;
+      if (prediction.congestion_level === 'Medium') return 2;
+      if (prediction.congestion_level === 'High') return 3;
+      if (prediction.congestion_level === 'Critical') return 3;
+    }
+    return currentWeight;
+  })();
+
+  const status = getStatusConfig(displayWeight);
+
+  // Wait minutes estimation should follow the display weight
+  const displayWaitMinutes = (() => {
+    if (prediction) {
+      if (userReport) return estimatedWaitMinutes;
+      if (prediction.congestion_level === 'Low') return 3;
+      if (prediction.congestion_level === 'Medium') return 12;
+      if (prediction.congestion_level === 'High') return 25;
+      if (prediction.congestion_level === 'Critical') return 45;
+    }
+    return estimatedWaitMinutes;
+  })();
 
   // Line brand line-connector colors
   const getLineColorClass = (line: string) => {
@@ -302,7 +363,7 @@ export const StationRow: React.FC<StationRowProps> = ({
           {/* Inner core circle with status color */}
           <div 
             className={`w-3.5 h-3.5 rounded-full ${status.bg} transition-all duration-300 ${
-              currentWeight === 3 ? 'status-active-pulse' : ''
+              displayWeight === 3 ? 'status-active-pulse' : ''
             }`}
           />
         </div>
@@ -323,7 +384,7 @@ export const StationRow: React.FC<StationRowProps> = ({
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center flex-wrap gap-x-2 gap-y-0.5">
             <h3 className="font-extrabold text-[15px] sm:text-base text-slate-800 dark:text-slate-200 tracking-tight leading-tight">
-              {station.name} <span className="text-slate-400 dark:text-slate-500 font-medium">· {station.line}</span>
+              {station.name}
             </h3>
             <span className="inline-flex text-[9px] font-bold px-1.5 py-0.2 text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900/50 rounded-sm">
               #{station.order}
@@ -368,7 +429,7 @@ export const StationRow: React.FC<StationRowProps> = ({
             {/* Status Pill (Human-readable Wait Times) */}
             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[10px] font-bold tracking-wide ${status.badgeBg} ${status.text} ${status.border}`}>
               <span className={`w-1.5 h-1.5 rounded-full ${status.bg}`} />
-              {status.label} (~{estimatedWaitMinutes} min)
+              {status.label} (~{displayWaitMinutes} min)
             </span>
 
             {/* Next Train Countdown Estimation */}
@@ -393,6 +454,46 @@ export const StationRow: React.FC<StationRowProps> = ({
         {/* Row 4: Progressive Disclosure Accordion Panels */}
         {isExpanded && (
           <div className="mt-3.5 pt-3.5 border-t border-slate-100 dark:border-slate-800/60 flex flex-col space-y-2 animate-fadeIn text-left text-xs text-slate-500 dark:text-slate-400">
+            {/* Live ML Prediction Block */}
+            <div className={`p-3 rounded-xl border text-left transition-all duration-300 shadow-2xs ${
+              predictionLoading 
+                ? 'bg-slate-50 dark:bg-slate-900/40 border-slate-200/50 dark:border-slate-800/50 text-slate-500'
+                : prediction?.congestion_level === 'Low'
+                  ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 dark:border-emerald-500/10'
+                  : prediction?.congestion_level === 'Medium'
+                    ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20 dark:border-amber-500/10'
+                    : prediction?.congestion_level === 'High'
+                      ? 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20 dark:border-red-500/10'
+                      : prediction?.congestion_level === 'Critical'
+                        ? 'bg-rose-600/20 text-rose-700 dark:text-rose-400 border-rose-500/30 dark:border-rose-500/20 font-bold animate-pulse'
+                        : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-500'
+            }`}>
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Live ML Forecast</span>
+                {predictionLoading && <span className="text-[9px] font-bold text-slate-400 animate-pulse">Updating...</span>}
+              </div>
+              {prediction ? (
+                <div className="space-y-1 text-[11px] font-semibold">
+                  <div className="flex justify-between items-center">
+                    <span>Congestion Level:</span>
+                    <strong className="text-slate-800 dark:text-slate-100 font-extrabold text-xs">{prediction.congestion_level}</strong>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Predicted Volume:</span>
+                    <strong className="text-slate-800 dark:text-slate-100">{Math.round(prediction.predicted_volume).toLocaleString()} entries/hr</strong>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Active Reports (30m):</span>
+                    <strong className="text-slate-800 dark:text-slate-100">{prediction.live_reports_count} reports</strong>
+                  </div>
+                </div>
+              ) : (
+                <span className="text-[11px] text-slate-400">
+                  {predictionLoading ? 'Fetching predictions...' : 'ML forecast unavailable (offline).'}
+                </span>
+              )}
+            </div>
+
             {/* Operating Times normalized to 12h format */}
             {timetable && (
               <div className="grid grid-cols-2 gap-2">
