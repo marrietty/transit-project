@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 
 # Import the custom transformer to allow joblib deserialization
 from model_utils import CyclicTransformer
+from query_reports import fetch_and_aggregate_reports, get_supabase_client
 
 # Define Model File Name
 MODEL_PATH = "transit_crowd_model.joblib"
@@ -51,6 +52,26 @@ def startup_event():
 # 1. HELPER FUNCTIONS
 # =====================================================================
 
+def normalize_station_id(station_id: str) -> str:
+    """
+    Normalizes frontend station IDs to match the uppercase, hyphenless format
+    used in the ML training dataset vocabulary.
+    """
+    val = station_id.upper()
+    mappings = {
+        'LRT1-FPJ': 'LRT1-ROOSEVELT',
+        'LRT2-MARIKINA-PASIG': 'LRT2-MARIKINA',
+        'MRT3-SANTOLAN-ANNAPOLIS': 'MRT3-SANTOLAN',
+    }
+    if val in mappings:
+        return mappings[val]
+    if '-' in val:
+        parts = val.split('-', 1)
+        second_part = parts[1].replace('-', '')
+        return f"{parts[0]}-{second_part}"
+    return val
+
+
 def get_line_for_station(station_id: str) -> str:
     """
     Infers the transit line based on the standard station ID prefix.
@@ -88,20 +109,35 @@ def check_if_payday(current_date: datetime.date) -> int:
 
 def query_live_reports(station_id: str):
     """
-    Simulates a database query returning the average wait time and report count
-    submitted by users for a specific station in the past 30 minutes.
+    Queries the actual Supabase database for user reports in the past 30 minutes.
+    Maps the average congestion level (1-3) to a corresponding wait time in minutes.
     """
-    # In a real environment, this executes:
-    # SELECT AVG(wait_time), COUNT(*) FROM station_reports
-    # WHERE station_id = :station_id AND created_at >= NOW() - INTERVAL '30 minutes'
-    
-    # Simulating data: 25% chance of no recent reports
-    if random.random() < 0.25:
+    try:
+        metrics = fetch_and_aggregate_reports(station_id)
+        if "error" in metrics:
+            print(f"Database query error in query_live_reports: {metrics['error']}")
+            return None, 0
+            
+        recent_report_count = metrics["recent_report_count"]
+        if recent_report_count == 0:
+            return None, 0
+            
+        # Map average congestion level (1.0 to 3.0) to wait time in minutes (5.0 to 35.0)
+        # Clear (1.0) -> 5 mins
+        # Moderate (2.0) -> 15 mins
+        # Heavy (3.0) -> 35 mins
+        avg_cong = metrics["recent_report_average"]
+        if avg_cong <= 1.0:
+            avg_wait = 5.0
+        elif avg_cong <= 2.0:
+            avg_wait = 5.0 + (avg_cong - 1.0) * 10.0
+        else:
+            avg_wait = 15.0 + (avg_cong - 2.0) * 20.0
+            
+        return round(avg_wait, 1), recent_report_count
+    except Exception as err:
+        print(f"Unexpected error in query_live_reports: {err}")
         return None, 0
-
-    num_reports = random.randint(1, 12)
-    avg_wait = round(random.uniform(3.0, 45.0), 1)
-    return avg_wait, num_reports
 
 
 def get_congestion_level(volume: float) -> str:
@@ -122,6 +158,74 @@ def get_congestion_level(volume: float) -> str:
 # =====================================================================
 # 2. SCHEMAS AND ENDPOINTS
 # =====================================================================
+
+class ReportPayload(BaseModel):
+    station_id: str
+    congestion_level: int
+
+@app.post(
+    "/api/report",
+    summary="Submit a live commuter report"
+)
+def submit_report(payload: ReportPayload) -> Dict[str, Any]:
+    """
+    Submits a commuter congestion report for a station to the Supabase database.
+    """
+    try:
+        supabase_client = get_supabase_client()
+        response = supabase_client.table("station_reports").insert({
+            "station_id": payload.station_id,
+            "congestion_level": payload.congestion_level
+        }).execute()
+        return {"status": "success", "data": response.data}
+    except Exception as err:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to submit report: {str(err)}"
+        )
+
+@app.get(
+    "/api/reports",
+    summary="Get all recent commuter reports from the past 30 minutes"
+)
+def get_all_reports() -> Dict[str, Any]:
+    """
+    Queries the database for all reports in the past 30 minutes and returns them
+    grouped by station_id so the frontend can populate its userReports state.
+    """
+    try:
+        supabase_client = get_supabase_client()
+        time_threshold = datetime.now(timezone.utc) - timedelta(minutes=30)
+        iso_threshold = time_threshold.isoformat()
+        
+        response = (
+            supabase_client.table("station_reports")
+            .select("station_id, congestion_level, reported_at")
+            .gte("reported_at", iso_threshold)
+            .execute()
+        )
+        reports = response.data or []
+        
+        grouped = {}
+        for r in reports:
+            sid = r["station_id"]
+            level = r["congestion_level"]
+            mins = 5 if level == 1 else 15 if level == 2 else 35
+            timestamp_str = r["reported_at"]
+            
+            if sid not in grouped or timestamp_str > grouped[sid]["timestamp"]:
+                grouped[sid] = {
+                    "weight": level,
+                    "minutes": mins,
+                    "note": f"Live report (queue is {'clear' if level == 1 else 'moving' if level == 2 else 'backed up'})",
+                    "timestamp": timestamp_str
+                }
+        return grouped
+    except Exception as err:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to fetch reports: {str(err)}"
+        )
 
 class StatusResponse(BaseModel):
     station_id: str = Field(..., description="Unique transit station identifier.")
@@ -180,8 +284,9 @@ def get_station_status(
     line = get_line_for_station(station_id)
 
     # 4. Formulate prediction input payload dictionary
+    normalized_sid = normalize_station_id(station_id)
     payload_dict = {
-        'station_id': station_id,
+        'station_id': normalized_sid,
         'line': line,
         'direction': direction,
         'hour': server_hour,
