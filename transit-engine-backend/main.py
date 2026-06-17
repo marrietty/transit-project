@@ -159,7 +159,10 @@ def live_wait_time(station_id: str) -> tuple[Optional[float], int]:
     """
     try:
         reports = fetch_recent_reports(station_id)
-    except HTTPException:
+    except Exception as err:
+        # Live reports are optional — the model imputes a missing wait time.
+        # Never let a Supabase/credentials error break the prediction.
+        print(f"live_wait_time: skipping live reports ({err})")
         return None, 0
 
     count = len(reports)
@@ -220,7 +223,7 @@ def read_root() -> Dict[str, str]:
 @app.get("/api/status/{station_id}", response_model=StatusResponse)
 def get_station_status(
     station_id: str = Path(..., description="Station ID, e.g. 'mrt3-ayala'"),
-    direction: str = Query("NB", regex="^(NB|SB)$"),
+    direction: str = Query("NB", pattern="^(NB|SB)$"),
     override_wait_time: Optional[float] = Query(None, description="Dev override for wait time."),
     override_report_count: Optional[int] = Query(None, description="Dev override for report count."),
 ) -> Dict[str, Any]:
