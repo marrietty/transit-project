@@ -17,6 +17,7 @@ export default function App() {
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+  const [refetchTrigger, setRefetchTrigger] = useState<number>(0);
 
   // Real-time crowd forecasting states fed from FastAPI model
   const [prediction, setPrediction] = useState<{
@@ -25,6 +26,33 @@ export default function App() {
     live_reports_count: number;
   } | null>(null);
   const [predictionLoading, setPredictionLoading] = useState<boolean>(false);
+
+  // Fetch all active user reports from database on mount to restore them on refresh
+  useEffect(() => {
+    if (!isOnline) return;
+
+    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    fetch(`${apiBaseUrl}/api/reports`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch initial reports');
+        return res.json();
+      })
+      .then((data) => {
+        const mapped: Record<string, UserReport> = {};
+        Object.keys(data).forEach((sid) => {
+          mapped[sid] = {
+            weight: data[sid].weight,
+            minutes: data[sid].minutes,
+            note: data[sid].note,
+            timestamp: new Date(data[sid].timestamp),
+          };
+        });
+        setUserReports(mapped);
+      })
+      .catch((err) => {
+        console.error('Error fetching initial reports:', err);
+      });
+  }, [isOnline]);
 
   // Monitor network status for PWA UX
   useEffect(() => {
@@ -50,7 +78,7 @@ export default function App() {
     };
   }, []);
 
-  // Fetch real-time predictions from the FastAPI regression model when selectedStation changes
+  // Fetch real-time predictions from the FastAPI regression model when selectedStation changes or refetchTrigger updates
   useEffect(() => {
     if (!selectedStation) {
       setPrediction(null);
@@ -82,7 +110,7 @@ export default function App() {
       .finally(() => {
         setPredictionLoading(false);
       });
-  }, [selectedStation]);
+  }, [selectedStation, refetchTrigger]);
 
   // Show status toasts
   const showToast = (message: string) => {
@@ -105,6 +133,30 @@ export default function App() {
         timestamp: new Date(),
       },
     }));
+
+    // Post to backend database if online
+    const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    fetch(`${apiBaseUrl}/api/report`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        station_id: stationId,
+        congestion_level: weight,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to submit report to database');
+        return res.json();
+      })
+      .then(() => {
+        console.log('Report submitted successfully to database.');
+        setRefetchTrigger((prev) => prev + 1);
+      })
+      .catch((err) => {
+        console.error('Error submitting report to database:', err);
+      });
 
     const statusLabel = weight === 3 ? 'Heavy' : weight === 2 ? 'Moderate' : 'Clear';
     showToast(`Submitted: ${stationName} is currently ${statusLabel} (${minutes}m wait)`);
@@ -176,7 +228,7 @@ export default function App() {
   return (
     <div className="w-full min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
       
-      {/* Top Banner: Connection status & Crowdsource simulation button */}
+      {/* Top Banner: Connection status & Crowdsource simulation button
       <div className="w-full bg-slate-900 text-slate-100 text-xs px-4 py-2 flex justify-between items-center z-30 shadow-sm">
         <div className="flex items-center gap-1.5 font-semibold">
           {isOnline ? (
@@ -199,7 +251,7 @@ export default function App() {
           <RefreshCw className="w-3 h-3" />
           <span>Simulate Commuter Feeds</span>
         </button>
-      </div>
+      </div> */}
 
       {/* Main app boundary */}
       <div className="w-full max-w-md mx-auto flex-1 flex flex-col bg-white dark:bg-[#0b101c] shadow-xl relative min-h-full border-x border-slate-100 dark:border-slate-900">
@@ -296,6 +348,7 @@ export default function App() {
           userReports={userReports}
           onOpenReportModal={setSelectedStation}
           isOnline={isOnline}
+          refetchTrigger={refetchTrigger}
         />
 
         {/* Bottom PWA Info Panel */}
